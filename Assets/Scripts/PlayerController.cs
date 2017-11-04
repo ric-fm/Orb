@@ -195,7 +195,7 @@ public class PlayerController : MonoBehaviour
 	{
 		if (!haveOrb)
 		{
-			Vector3 orbPosition = orb.GetTeleportPosition();
+			Vector3 orbPosition = orb.GetTeleportPosition() - Vector3.up * characterController.height / 2;
 			orb.Reset();
 			haveOrb = true;
 			transform.position = orbPosition;
