@@ -27,6 +27,15 @@ public class PlayerController : MonoBehaviour {
 
 	bool isGrounded;
 
+	public Transform cameraTransform;
+
+	public Transform orbPoint;
+	public OrbController orb;
+	public float shootSpeed = 10.0f;
+	public float attractSpeed = 5.0f;
+
+	bool haveOrb = true;
+
 	CharacterController characterController;
 
 	void Start () {
@@ -45,13 +54,31 @@ public class PlayerController : MonoBehaviour {
 		bool jump = Input.GetButtonDown("Jump");
 
 		bool fire1 = Input.GetButtonDown("Fire1");
+		bool fire2 = Input.GetButton("Fire2");
+		bool resetOrb = Input.GetButtonDown("ResetOrb");
+		bool teleport = Input.GetButtonDown("Teleport");
 
+		if (fire1)
+		{
+			ShootOrb();
+		}
 
-		// Handle inertia and decrease input control when character is on air
-		moveDirection = isGrounded ? inputDirection : Vector2.Lerp(moveDirection, inputDirection, airControlPercent);
+		if(resetOrb)
+		{
+			ResetOrb();
+		}
+		if(teleport)
+		{
+			Teleport();
+		}
+
+		if(fire2)
+		{
+			AttractOrb();
+		}
 
 		// Update character
-		Move(moveDirection, isRunning);
+		Move(inputDirection, isRunning);
 
 		if (jump)
 		{
@@ -61,6 +88,9 @@ public class PlayerController : MonoBehaviour {
 
 	void Move(Vector2 direction, bool isRunning)
 	{
+		// Handle inertia and decrease input control when character is on air
+		moveDirection = isGrounded ? direction : Vector2.Lerp(moveDirection, direction, airControlPercent);
+
 		Vector3 desiredDirection = transform.forward * direction.y + transform.right * direction.x;
 		float targetSpeed = (isRunning ? runSpeed : walkSpeed) * direction.magnitude;
 
@@ -122,12 +152,51 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
+	void ShootOrb()
+	{
+		if(haveOrb)
+		{
+			orb.Shoot(cameraTransform.forward, shootSpeed);
+			haveOrb = false;
+		}
+	}
+
+	void AttractOrb()
+	{
+		if(!haveOrb)
+		{
+			haveOrb = orb.Attract(orbPoint.position, attractSpeed);
+		}
+	}
+
+	void ResetOrb()
+	{
+		if(!haveOrb)
+		{
+			orb.Reset();
+			haveOrb = true;
+		}
+	}
+
+	void Teleport()
+	{
+		if(!haveOrb)
+		{
+			Vector3 orbPosition = orb.transform.position;
+			orb.Reset();
+			haveOrb = true;
+			transform.position = orbPosition;
+		}
+	}
+
 	void OnDrawGizmos()
 	{
 		Gizmos.color = isGrounded? Color.green : Color.red;
 		Gizmos.DrawLine(transform.position, transform.position - transform.up * GROUND_CHECK_DISTANCE);
 		Gizmos.color = Color.blue;
 		Gizmos.DrawLine(transform.position, transform.position + transform.forward);
+		Gizmos.color = Color.yellow;
+		Gizmos.DrawLine(cameraTransform.position, cameraTransform.position + cameraTransform.forward);
 		Gizmos.color = Color.white;
 	}
 }
