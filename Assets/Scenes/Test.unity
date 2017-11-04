@@ -313,7 +313,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 222543589}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 637, y: 140.5, z: 0}
+  m_LocalPosition: {x: 637, y: 188, z: 0}
   m_LocalScale: {x: 0.6635417, y: 0.6635417, z: 0.6635417}
   m_Children:
   - {fileID: 720019930}
@@ -1276,6 +1276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4b23e2dfd6fcae42a1d5d1c59b68a34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teleportDistance: 1.7
 --- !u!54 &1954430787
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1290,7 +1291,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 126
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!1 &2017720910
 GameObject:
   m_ObjectHideFlags: 0
@@ -1425,7 +1426,7 @@ MonoBehaviour:
   gravity: -12
   jumpHeight: 1
   slopeLimit: 45
-  cameraTransform: {fileID: 211786815}
+  camera: {fileID: 211786818}
   orbPoint: {fileID: 2017720911}
   orb: {fileID: 1954430786}
   shootSpeed: 10
@@ -1474,6 +1475,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnSpeed: 200
-  pitchMinMax: {x: -45, y: 80}
+  pitchMinMax: {x: -90, y: 80}
   body: {fileID: 2135609919}
   camera: {fileID: 211786818}

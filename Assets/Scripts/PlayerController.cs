@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
 
 	const float GROUND_CHECK_DISTANCE = 0.2f;
 
@@ -27,7 +28,7 @@ public class PlayerController : MonoBehaviour {
 
 	bool isGrounded;
 
-	public Transform cameraTransform;
+	public Camera camera;
 
 	public Transform orbPoint;
 	public OrbController orb;
@@ -38,7 +39,8 @@ public class PlayerController : MonoBehaviour {
 
 	CharacterController characterController;
 
-	void Start () {
+	void Start()
+	{
 		characterController = GetComponent<CharacterController>();
 	}
 
@@ -63,16 +65,16 @@ public class PlayerController : MonoBehaviour {
 			ShootOrb();
 		}
 
-		if(resetOrb)
+		if (resetOrb)
 		{
 			ResetOrb();
 		}
-		if(teleport)
+		if (teleport)
 		{
 			Teleport();
 		}
 
-		if(fire2)
+		if (fire2)
 		{
 			AttractOrb();
 		}
@@ -154,16 +156,27 @@ public class PlayerController : MonoBehaviour {
 
 	void ShootOrb()
 	{
-		if(haveOrb)
+		if (haveOrb)
 		{
-			orb.Shoot(cameraTransform.forward, shootSpeed);
-			haveOrb = false;
+			Vector3 shootDirection = camera.transform.forward;
+
+			Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+			Debug.DrawRay(ray.origin, ray.direction * 10, Color.yellow, 2f);
+
+			RaycastHit hitInfo;
+			if (Physics.Raycast(ray, out hitInfo))
+			{
+				shootDirection = (hitInfo.point - orb.transform.position).normalized;
+				orb.Shoot(shootDirection, shootSpeed);
+				haveOrb = false;
+			}
+
 		}
 	}
 
 	void AttractOrb()
 	{
-		if(!haveOrb)
+		if (!haveOrb)
 		{
 			haveOrb = orb.Attract(orbPoint.position, attractSpeed);
 		}
@@ -171,7 +184,7 @@ public class PlayerController : MonoBehaviour {
 
 	void ResetOrb()
 	{
-		if(!haveOrb)
+		if (!haveOrb)
 		{
 			orb.Reset();
 			haveOrb = true;
@@ -180,9 +193,9 @@ public class PlayerController : MonoBehaviour {
 
 	void Teleport()
 	{
-		if(!haveOrb)
+		if (!haveOrb)
 		{
-			Vector3 orbPosition = orb.transform.position;
+			Vector3 orbPosition = orb.GetTeleportPosition();
 			orb.Reset();
 			haveOrb = true;
 			transform.position = orbPosition;
@@ -191,12 +204,12 @@ public class PlayerController : MonoBehaviour {
 
 	void OnDrawGizmos()
 	{
-		Gizmos.color = isGrounded? Color.green : Color.red;
+		Gizmos.color = isGrounded ? Color.green : Color.red;
 		Gizmos.DrawLine(transform.position, transform.position - transform.up * GROUND_CHECK_DISTANCE);
 		Gizmos.color = Color.blue;
 		Gizmos.DrawLine(transform.position, transform.position + transform.forward);
 		Gizmos.color = Color.yellow;
-		Gizmos.DrawLine(cameraTransform.position, cameraTransform.position + cameraTransform.forward);
+		Gizmos.DrawLine(camera.transform.position, camera.transform.position + camera.transform.forward);
 		Gizmos.color = Color.white;
 	}
 }
