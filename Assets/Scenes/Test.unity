@@ -313,8 +313,8 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 222543589}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 366, y: 293, z: 0}
-  m_LocalScale: {x: 0.38125, y: 0.38125, z: 0.38125}
+  m_LocalPosition: {x: 351, y: 293, z: 0}
+  m_LocalScale: {x: 0.365625, y: 0.365625, z: 0.365625}
   m_Children:
   - {fileID: 720019930}
   m_Father: {fileID: 0}
@@ -720,7 +720,7 @@ Prefab:
         type: 2}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 454a0bb184653554ba213f91e1995735, type: 2}
+      objectReference: {fileID: 2100000, guid: bf1651f90d2f3b74c95e0203ddb6a6d0, type: 2}
     - target: {fileID: 4194742483182474, guid: 1e443eb1f66467445ba78d05b7574836, type: 2}
       propertyPath: m_LocalScale.x
       value: 1
@@ -872,6 +872,90 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1353646923}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &953776807
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 953776811}
+  - component: {fileID: 953776810}
+  - component: {fileID: 953776809}
+  - component: {fileID: 953776808}
+  m_Layer: 0
+  m_Name: Sphere
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!23 &953776808
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 953776807}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_Materials:
+  - {fileID: 2100000, guid: bf1651f90d2f3b74c95e0203ddb6a6d0, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!135 &953776809
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 953776807}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &953776810
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 953776807}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &953776811
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 953776807}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.3, y: 6.25, z: -6.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1087099298 stripped
 GameObject:
@@ -1687,15 +1771,16 @@ MonoBehaviour:
   walkSpeed: 2
   runSpeed: 5
   speedSmoothTime: 0.2
-  airControlPercent: 0.05
+  airControlPercent: 0.001
   gravity: -12
+  maxVelocityY: 48
   jumpHeight: 1
   slopeLimit: 45
   camera: {fileID: 211786818}
   orbPoint: {fileID: 2017720911}
   orb: {fileID: 1954430786}
   shootSpeed: 10
-  attractSpeed: 5
+  attractSpeed: 7
 --- !u!143 &2135609918
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1720,7 +1805,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2135609916}
   m_LocalRotation: {x: -0, y: 0.99982154, z: -0, w: -0.018890424}
-  m_LocalPosition: {x: -5.45, y: 9.1, z: -15.17}
+  m_LocalPosition: {x: -5.45, y: 0.69, z: -15.17}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1208119635}

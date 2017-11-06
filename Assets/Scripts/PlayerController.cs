@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
 	public float airControlPercent = 0.05f;
 
 	public float gravity = -12.0f;
+	public float maxVelocityY = 48.0f;
 
 	public float jumpHeight = 1.0f;
 
@@ -51,38 +52,44 @@ public class PlayerController : MonoBehaviour
 
 		Vector2 lookDirection = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y"));
 
-		bool isRunning = Input.GetAxis("Run") != 0;
+		//bool isRunning = Input.GetAxis("Run") != 0;
+		//bool isRunning = Input.GetButton("Run");
 
 		bool jump = Input.GetButtonDown("Jump");
 
 		bool fire1 = Input.GetButtonDown("Fire1");
 		bool fire2 = Input.GetButton("Fire2");
 		bool resetOrb = Input.GetButtonDown("ResetOrb");
-		bool teleport = Input.GetButtonDown("Teleport");
 
-		if (fire1)
+		if(haveOrb)
 		{
-			ShootOrb();
+			if(fire1)
+			{
+				ShootOrb();
+			}
 		}
+		else
+		{
+			if(fire1 && orb.CanTeleport())
+			{
+				Teleport();
+			}
 
-		if (resetOrb)
-		{
-			ResetOrb();
-		}
-		if (teleport)
-		{
-			Teleport();
-		}
+			if (fire2)
+			{
+				AttractOrb();
+			}
 
-		if (fire2)
-		{
-			AttractOrb();
+			if (resetOrb)
+			{
+				ResetOrb();
+			}
 		}
 
 		// Update character
-		Move(inputDirection, isRunning);
+		Move(inputDirection, true);
 
-		if (jump)
+		if (jump && isGrounded)
 		{
 			Jump();
 		}
@@ -106,6 +113,7 @@ public class PlayerController : MonoBehaviour
 
 		// Gravity
 		velocityY += gravity * Time.deltaTime;
+		velocityY = Mathf.Clamp(velocityY, -maxVelocityY, maxVelocityY);
 
 		// Check OnGround-OnAir
 		RaycastHit hit;
@@ -148,58 +156,42 @@ public class PlayerController : MonoBehaviour
 
 	void Jump()
 	{
-		if (isGrounded)
-		{
-			velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
-		}
+		velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
 	}
 
 	void ShootOrb()
 	{
-		if (haveOrb)
+		Vector3 shootDirection = camera.transform.forward;
+
+		Ray ray = camera.ScreenPointToRay(Input.mousePosition);
+		Debug.DrawRay(ray.origin, ray.direction * 10, Color.yellow, 2f);
+
+		RaycastHit hitInfo;
+		if (Physics.Raycast(ray, out hitInfo))
 		{
-			Vector3 shootDirection = camera.transform.forward;
-
-			Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-			Debug.DrawRay(ray.origin, ray.direction * 10, Color.yellow, 2f);
-
-			RaycastHit hitInfo;
-			if (Physics.Raycast(ray, out hitInfo))
-			{
-				shootDirection = (hitInfo.point - orb.transform.position).normalized;
-				orb.Shoot(shootDirection, shootSpeed);
-				haveOrb = false;
-			}
-
+			shootDirection = (hitInfo.point - orb.transform.position).normalized;
+			orb.Shoot(shootDirection, shootSpeed);
+			haveOrb = false;
 		}
 	}
 
 	void AttractOrb()
 	{
-		if (!haveOrb)
-		{
-			haveOrb = orb.Attract(orbPoint.position, attractSpeed);
-		}
+		haveOrb = orb.Attract(orbPoint.position, attractSpeed);
 	}
 
 	void ResetOrb()
 	{
-		if (!haveOrb)
-		{
-			orb.Reset();
-			haveOrb = true;
-		}
+		orb.Reset();
+		haveOrb = true;
 	}
 
 	void Teleport()
 	{
-		if (!haveOrb)
-		{
-			Vector3 orbPosition = orb.GetTeleportPosition() - Vector3.up * characterController.height / 2;
-			orb.Reset();
-			haveOrb = true;
-			transform.position = orbPosition;
-		}
+		Vector3 orbPosition = orb.GetTeleportPosition() - Vector3.up * characterController.height / 2;
+		orb.Reset();
+		haveOrb = true;
+		transform.position = orbPosition;
 	}
 
 	void OnDrawGizmos()

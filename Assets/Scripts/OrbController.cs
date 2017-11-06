@@ -50,6 +50,12 @@ public class OrbController : MonoBehaviour
 			return true;
 		}
 
+		RaycastHit hit;
+		if(Physics.SphereCast(transform.position, 0.1f, direction.normalized, out hit, speed))
+		{
+			return false;
+		}
+
 		Vector3 desiredVelocity = direction.normalized * speed;
 		currentVelocity = Vector3.Lerp(currentVelocity, desiredVelocity, Time.deltaTime);
 
@@ -67,6 +73,11 @@ public class OrbController : MonoBehaviour
 
 		transform.SetParent(collision.collider.gameObject.transform);
 		transform.position -= hitNormal * collision.contacts[0].separation;
+	}
+
+	public bool CanTeleport()
+	{
+		return transform.parent != null && transform.parent != owner;
 	}
 
 	Vector3 lastTeleportPosition = Vector3.zero;
