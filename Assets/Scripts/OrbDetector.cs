@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OrbActivator : MonoBehaviour
+public class OrbDetector : Sensor
 {
 	public Transform orbPosition;
 
@@ -11,7 +11,8 @@ public class OrbActivator : MonoBehaviour
 		if (collision.gameObject.tag == "Orb")
 		{
 			collision.transform.position = orbPosition.position;
-			Debug.Log("OrbActivator on");
+
+			SetSignal(true);
 		}
 	}
 
@@ -19,7 +20,7 @@ public class OrbActivator : MonoBehaviour
 	{
 		if (collision.gameObject.tag == "Orb")
 		{
-			Debug.Log("OrbActivator off");
+			SetSignal(false);
 		}
 	}
 }

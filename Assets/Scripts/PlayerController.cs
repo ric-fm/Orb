@@ -388,7 +388,7 @@ public class PlayerController : MonoBehaviour
 		if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hitInfo, interactMaxDistance, 1 << LayerMask.NameToLayer("Interactable")))
 		{
 			Interactable button = hitInfo.collider.gameObject.GetComponent<Interactable>();
-			button.Activate();
+			button.Interact();
 		}
 	}
 

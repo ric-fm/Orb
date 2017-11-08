@@ -2,20 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PressurePlate : MonoBehaviour {
-
-	bool isActive;
-	public bool IsActive
-	{
-		get { return isActive; }
-	}
+public class PressurePlate : Sensor {
 
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.tag == "Player")
 		{
-			Debug.Log("Activate");
-			isActive = true;
+			SetSignal(true);
 		}
 	}
 
@@ -23,8 +16,7 @@ public class PressurePlate : MonoBehaviour {
 	{
 		if (other.tag == "Player")
 		{
-			Debug.Log("Deactivate");
-			isActive = false;
+			SetSignal(false);
 		}
 	}
 }
