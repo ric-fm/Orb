@@ -17,7 +17,8 @@ public class PlayerController : MonoBehaviour
 	public float airControlPercent = 0.05f;
 
 	public float gravity = -12.0f;
-	public float maxVelocityY = 48.0f;
+	public float maxHorizontalVelocity = 48.0f;
+	public float maxVerticalVelocity = 48.0f;
 
 	public float jumpHeight = 1.0f;
 
@@ -27,6 +28,7 @@ public class PlayerController : MonoBehaviour
 	float speedSmoothVelocity;
 	float velocityY;
 	Vector2 moveDirection;
+	Vector3 currentVelocity;
 
 	bool isGrounded;
 
@@ -116,8 +118,10 @@ public class PlayerController : MonoBehaviour
 		// Update character
 		if (canMove)
 		{
-			Move(inputDirection, true);
+			currentVelocity = GetInputVelocity(inputDirection, true);
 		}
+
+		MoveCharacter();
 
 		if (jump && isGrounded)
 		{
@@ -125,35 +129,48 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
-	void Move(Vector2 direction, bool isRunning)
+	Vector3 GetInputVelocity(Vector2 direction, bool isRunning)
 	{
-		// Handle inertia and decrease input control when character is on air
-		moveDirection = isGrounded ? direction : Vector2.Lerp(moveDirection, direction, airControlPercent);
-
+		Vector3 inputVelocity = currentVelocity;
+		// Calculate velocity relative to forward vector, input direction an speed
 		Vector3 desiredDirection = transform.forward * direction.y + transform.right * direction.x;
-		float targetSpeed = (isRunning ? runSpeed : walkSpeed) * direction.magnitude;
+		float targetSpeed = (isRunning ? runSpeed : walkSpeed) * desiredDirection.magnitude;
+		Vector3 velocity = desiredDirection * targetSpeed;
 
-		MoveCharacter(desiredDirection, targetSpeed);
+		// Handle inertia and decrease input control when character is on air
+		velocity = isGrounded ? velocity : Vector3.Lerp(currentVelocity, velocity, airControlPercent);
+		inputVelocity.x = velocity.x;
+		inputVelocity.z = velocity.z;
+
+		return inputVelocity;
 	}
 
-	void MoveCharacter(Vector3 direction, float speed)
+	void MoveCharacter()
 	{
-		// Smooth speed
-		currentSpeed = Mathf.SmoothDamp(currentSpeed, speed, ref speedSmoothVelocity, speedSmoothTime);
-
 		// Gravity
-		velocityY += gravity * Time.deltaTime;
-		velocityY = Mathf.Clamp(velocityY, -maxVelocityY, maxVelocityY);
+		currentVelocity.y += gravity * Time.deltaTime;
+
+		// Limit vertical velocity
+		currentVelocity.y = Mathf.Clamp(currentVelocity.y, -maxVerticalVelocity, maxVerticalVelocity);
+
+		// Limit horizontal velocity
+		Vector2 hDirection = new Vector2(currentVelocity.x, currentVelocity.z);
+		float hSpeed = Mathf.Clamp(hDirection.magnitude, -maxHorizontalVelocity, maxHorizontalVelocity);
+
+		Vector2 limitedHorizonalVelocity = hDirection.normalized * hSpeed;
+		currentVelocity.x = limitedHorizonalVelocity.x;
+		currentVelocity.z = limitedHorizonalVelocity.y;
+
 
 		// Reset velocity to avoid "speed accumulation by gravity"
 		if (grabbedToWall)
 		{
-			velocityY = 0;
+			currentVelocity.y = 0;
 		}
 
 		// Check OnGround-OnAir
 		RaycastHit hit;
-		if (Physics.Raycast(transform.position, Vector3.down, out hit, GROUND_CHECK_DISTANCE) && velocityY < 0.0f)
+		if (Physics.Raycast(transform.position, Vector3.down, out hit, GROUND_CHECK_DISTANCE, ~(1 << LayerMask.NameToLayer("Trigger"))) && currentVelocity.y < 0.0f)
 		{
 			isGrounded = true;
 
@@ -161,7 +178,7 @@ public class PlayerController : MonoBehaviour
 			float groundAngle = Vector3.Angle(Vector3.up, hit.normal);
 			if (groundAngle < characterController.slopeLimit)
 			{
-				direction = Vector3.ProjectOnPlane(direction, hit.normal);
+				currentVelocity = Vector3.ProjectOnPlane(currentVelocity, hit.normal);
 			}
 		}
 		else
@@ -180,26 +197,31 @@ public class PlayerController : MonoBehaviour
 		}
 
 		// Move character
-		Vector3 movement = direction * speed + Vector3.up * velocityY;
-		characterController.Move(movement * Time.deltaTime);
+		characterController.Move(currentVelocity * Time.deltaTime);
 
 		// Reset velocity to avoid "speed accumulation by gravity"
 		if (isGrounded || grabbedToWall)
 		{
-			velocityY = 0;
+			currentVelocity.y = 0;
 		}
 	}
 
 	void Jump()
 	{
 		velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
+		currentVelocity.y = Mathf.Sqrt(-2 * gravity * jumpHeight);
+	}
+
+	public void Push(Vector3 force)
+	{
+		isGrounded = false;
+		currentVelocity = force;
 	}
 
 	void ShootOrb()
 	{
 		Vector3 shootDirection = camera.transform.forward;
 
-		//Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 		Ray ray = new Ray(camera.transform.position, camera.transform.forward);
 		Debug.DrawRay(ray.origin, ray.direction * 10, Color.yellow, 2f);
 
@@ -317,6 +339,8 @@ public class PlayerController : MonoBehaviour
 		Gizmos.DrawLine(transform.position, transform.position + transform.forward);
 		Gizmos.color = Color.yellow;
 		Gizmos.DrawLine(camera.transform.position, camera.transform.position + camera.transform.forward);
+		Gizmos.color = Color.green;
+		Gizmos.DrawLine(transform.position, transform.position + currentVelocity);
 		Gizmos.color = Color.white;
 	}
 }
