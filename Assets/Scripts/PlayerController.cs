@@ -21,12 +21,13 @@ public class PlayerController : MonoBehaviour
 	public float maxVerticalVelocity = 48.0f;
 
 	public float jumpHeight = 1.0f;
+	public float wallJumpDistance = 1.5f;
+	public float wallJumpHeight = 0.5f;
 
 	public float slopeLimit = 45.0f;
 
 	float currentSpeed;
 	float speedSmoothVelocity;
-	float velocityY;
 	Vector2 moveDirection;
 	Vector3 currentVelocity;
 
@@ -55,6 +56,8 @@ public class PlayerController : MonoBehaviour
 	bool canMove = true;
 
 	public float interactMaxDistance = 3.0f;
+
+	Vector3 grabbedWallNormal;
 
 	void Start()
 	{
@@ -131,7 +134,7 @@ public class PlayerController : MonoBehaviour
 
 		MoveCharacter();
 
-		if (jump && isGrounded)
+		if (jump && (isGrounded || grabbedToWall))
 		{
 			Jump();
 		}
@@ -216,8 +219,16 @@ public class PlayerController : MonoBehaviour
 
 	void Jump()
 	{
-		velocityY = Mathf.Sqrt(-2 * gravity * jumpHeight);
-		currentVelocity.y = Mathf.Sqrt(-2 * gravity * jumpHeight);
+		if(grabbedToWall)
+		{
+			UngrabWall();
+			currentVelocity = grabbedWallNormal * Mathf.Sqrt(-2 * gravity * wallJumpDistance);
+			currentVelocity.y = Mathf.Sqrt(-2 * gravity * wallJumpHeight);
+		}
+		else
+		{
+			currentVelocity.y = Mathf.Sqrt(-2 * gravity * jumpHeight);
+		}
 	}
 
 	public void Push(Vector3 force)
@@ -308,6 +319,8 @@ public class PlayerController : MonoBehaviour
 	{
 		// Attach player to wall
 		transform.parent = wall.transform;
+
+		grabbedWallNormal = normal;
 
 		// IK management
 		leftHandIK.enabled = true;
