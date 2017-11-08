@@ -54,6 +54,8 @@ public class PlayerController : MonoBehaviour
 
 	bool canMove = true;
 
+	public float interactMaxDistance = 3.0f;
+
 	void Start()
 	{
 		characterController = GetComponent<CharacterController>();
@@ -78,6 +80,7 @@ public class PlayerController : MonoBehaviour
 		bool grabDown = Input.GetButtonDown("Grab");
 		bool grabUp = Input.GetButtonUp("Grab");
 		bool grab = Input.GetButton("Grab");
+		bool interact = Input.GetButtonDown("Interact");
 
 		if (haveOrb)
 		{
@@ -113,6 +116,11 @@ public class PlayerController : MonoBehaviour
 		if (grabUp && grabbedToWall)
 		{
 			UngrabWall();
+		}
+
+		if(interact)
+		{
+			Interact();
 		}
 
 		// Update character
@@ -165,7 +173,7 @@ public class PlayerController : MonoBehaviour
 		// Reset velocity to avoid "speed accumulation by gravity"
 		if (grabbedToWall)
 		{
-			currentVelocity.y = 0;
+			currentVelocity = Vector3.zero;
 		}
 
 		// Check OnGround-OnAir
@@ -329,6 +337,16 @@ public class PlayerController : MonoBehaviour
 		grabbedToWall = false;
 		canMove = true;
 		leftHandIK.enabled = false;
+	}
+
+	void Interact()
+	{
+		RaycastHit hitInfo;
+		if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hitInfo, interactMaxDistance, 1 << LayerMask.NameToLayer("Interactable")))
+		{
+			Interactable button = hitInfo.collider.gameObject.GetComponent<Interactable>();
+			button.Activate();
+		}
 	}
 
 	void OnDrawGizmos()
