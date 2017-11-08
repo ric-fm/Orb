@@ -7,8 +7,6 @@ public class OrbController : MonoBehaviour
 	const float CHECK_TARGET_SQR_DISTANCE = 1;
 	const float ORB_RADIUS = 0.1f;
 
-	Transform defaultParent;
-
 	public Vector3 directionToPlayer;
 
 	public Vector3 contactPosition;
@@ -21,19 +19,20 @@ public class OrbController : MonoBehaviour
 	Vector3 lastTeleportPosition = Vector3.zero;
 	Vector3 lastTeleportContactPosition;
 
+	PlayerController player;
 
 	void Start()
 	{
-		defaultParent = transform.parent;
+		player = GameObject.FindObjectOfType<PlayerController>();
 	}
 
 	void Update()
 	{
-		if (transform.parent != defaultParent)
+		if (transform.parent != player.orbPoint)
 		{
 			transform.position += currentVelocity * Time.deltaTime;
 
-			directionToPlayer = defaultParent.transform.position - transform.position;
+			directionToPlayer = player.orbPoint.transform.position - transform.position;
 		}
 	}
 
@@ -41,7 +40,7 @@ public class OrbController : MonoBehaviour
 	{
 		currentVelocity = Vector3.zero;
 
-		transform.SetParent(defaultParent);
+		transform.SetParent(player.orbPoint);
 		transform.localPosition = Vector3.zero;
 	}
 
@@ -103,7 +102,7 @@ public class OrbController : MonoBehaviour
 	public bool CanTeleport()
 	{
 		// Can teleport if is attached to wall
-		return transform.parent != null && transform.parent != defaultParent;
+		return transform.parent != null && transform.parent != player.orbPoint;
 	}
 
 	public void GetTeleportInfo(out Vector3 teleportPosition, out Vector3 contactPosition, out Vector3 teleportNormal)

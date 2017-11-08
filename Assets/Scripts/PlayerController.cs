@@ -36,11 +36,8 @@ public class PlayerController : MonoBehaviour
 	public Camera camera;
 
 	public Transform orbPoint;
-	public OrbController orb;
 	public float shootSpeed = 10.0f;
 	public float attractSpeed = 5.0f;
-
-	bool haveOrb = true;
 
 	public Transform grabCheck;
 
@@ -59,12 +56,17 @@ public class PlayerController : MonoBehaviour
 
 	Vector3 grabbedWallNormal;
 
+	List<OrbController> orbs;
+	public OrbController currentOrb;
+
 	void Start()
 	{
 		characterController = GetComponent<CharacterController>();
 		defaultParent = transform.parent;
 
 		leftHandIK.enabled = false;
+
+		orbs = new List<OrbController>(GameObject.FindObjectsOfType<OrbController>());
 	}
 
 	void Update()
@@ -85,32 +87,32 @@ public class PlayerController : MonoBehaviour
 		bool grab = Input.GetButton("Grab");
 		bool interact = Input.GetButtonDown("Interact");
 
-		if (haveOrb)
+		if (currentOrb.transform.parent != orbPoint)
 		{
-			if (fire1)
-			{
-				ShootOrb();
-			}
-		}
-		else
-		{
-			if (fire1 && orb.CanTeleport())
+			currentOrb = GetCurrentOrb();
+
+			if(fire1)
 			{
 				Teleport(grab);
 			}
-
-			if (fire2 && !haveOrb)
+			else if (fire2)
 			{
 				AttractOrb();
 			}
-
-			if (resetOrb)
+			else if(resetOrb)
 			{
 				ResetOrb();
 			}
 		}
+		else
+		{
+			if(fire1)
+			{
+				ShootOrb();
+			}
+		}
 
-		animator.SetBool("Attracting", fire2 && !haveOrb);
+		animator.SetBool("Attracting", fire2 && currentOrb == null);
 
 		if (grabDown)
 		{
@@ -249,32 +251,61 @@ public class PlayerController : MonoBehaviour
 		if (Physics.Raycast(ray, out hitInfo))
 		{
 			animator.SetTrigger("Shoot");
-			shootDirection = (hitInfo.point - orb.transform.position).normalized;
-			orb.Shoot(shootDirection, shootSpeed);
-			haveOrb = false;
+			shootDirection = (hitInfo.point - currentOrb.transform.position).normalized;
+			currentOrb.Shoot(shootDirection, shootSpeed);
 		}
 	}
 
 	void AttractOrb()
 	{
-		haveOrb = orb.Attract(orbPoint.position, attractSpeed);
+		if(currentOrb != null)
+		{
+			currentOrb.Attract(orbPoint.position, attractSpeed);
+		}
+	}
+
+	OrbController GetCurrentOrb()
+	{
+		OrbController closerOrb = null;
+		float minAngle = float.MaxValue;
+		int minAngleIndex = 0;
+
+		for (int i = 0; i < orbs.Count; ++i)
+		{
+			Vector3 targetDirection = (orbs[i].transform.position - camera.transform.position).normalized;
+			float dot = Vector3.Dot(targetDirection, camera.transform.forward);
+			float angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
+
+			if (angle < minAngle)
+			{
+				minAngle = angle;
+				minAngleIndex = i;
+			}
+		}
+		closerOrb = orbs[minAngleIndex];
+
+		return closerOrb;
 	}
 
 	void ResetOrb()
 	{
-		orb.Reset();
-		haveOrb = true;
+		currentOrb.Reset();
 	}
 
 	void Teleport(bool grabOrbWall)
 	{
-		GameObject wall = orb.transform.parent.gameObject;
+		if(currentOrb == null || !currentOrb.CanTeleport())
+		{
+			return;
+		}
+
+		GameObject wall = currentOrb.transform.parent.gameObject;
 
 		Vector3 teleportPosition = Vector3.zero;
 		Vector3 teleportContactPosition = Vector3.zero;
 		Vector3 teleportNormal = Vector3.zero;
 
-		orb.GetTeleportInfo(out teleportPosition, out teleportContactPosition, out teleportNormal);
+		currentOrb.GetTeleportInfo(out teleportPosition, out teleportContactPosition, out teleportNormal);
 
 		Vector3 newPosition = teleportPosition - Vector3.up * grabCheck.localPosition.y;
 		transform.position = newPosition;
@@ -291,8 +322,7 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 
-		haveOrb = true;
-		orb.Reset();
+		currentOrb.Reset();
 	}
 
 	bool GrabToWall()
