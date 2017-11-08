@@ -4,33 +4,45 @@ using UnityEngine;
 
 public class OrbController : MonoBehaviour
 {
-
 	const float CHECK_TARGET_SQR_DISTANCE = 1;
+	const float ORB_RADIUS = 0.1f;
 
-	Transform owner;
+	Transform defaultParent;
+
+	public Vector3 directionToPlayer;
+
+	public Vector3 contactPosition;
+	public Vector3 contactNormal;
 
 	Vector3 currentVelocity = Vector3.zero;
 
-	Vector3 hitNormal = Vector3.zero;
-
 	public Vector2 teleportOffset = new Vector2(0.95f, 0.5f);
+
+	Vector3 lastTeleportPosition = Vector3.zero;
+	Vector3 lastTeleportContactPosition;
+
 
 	void Start()
 	{
-		owner = transform.parent;
+		defaultParent = transform.parent;
 	}
 
 	void Update()
 	{
-		transform.position += currentVelocity * Time.deltaTime;
+		if (transform.parent != defaultParent)
+		{
+			transform.position += currentVelocity * Time.deltaTime;
+
+			directionToPlayer = defaultParent.transform.position - transform.position;
+		}
 	}
 
 	public void Reset()
 	{
 		currentVelocity = Vector3.zero;
-		transform.parent = owner;
+
+		transform.SetParent(defaultParent);
 		transform.localPosition = Vector3.zero;
-		hitNormal = Vector3.zero;
 	}
 
 	public void Shoot(Vector3 direction, float speed)
@@ -39,25 +51,32 @@ public class OrbController : MonoBehaviour
 		transform.SetParent(null);
 	}
 
+	bool NearToOwner()
+	{
+		return directionToPlayer.sqrMagnitude <= CHECK_TARGET_SQR_DISTANCE;
+	}
+
 	public bool Attract(Vector3 position, float speed)
 	{
-		transform.SetParent(null);
-		Vector3 direction = position - transform.position;
-
-		if (direction.sqrMagnitude <= CHECK_TARGET_SQR_DISTANCE)
+		if (NearToOwner())
 		{
 			Reset();
 			return true;
 		}
 
+		// Check if there is an obstacle in the movement path to not attract
 		RaycastHit hit;
-		if(Physics.SphereCast(transform.position, 0.1f, direction.normalized, out hit, speed))
+		Debug.DrawLine(transform.position, transform.position + directionToPlayer.normalized * currentVelocity.magnitude);
+		if (Physics.SphereCast(transform.position, 0.1f, directionToPlayer.normalized, out hit, 1, ~(1 << LayerMask.NameToLayer("Player"))))
 		{
 			return false;
 		}
 
-		Vector3 desiredVelocity = direction.normalized * speed;
-		currentVelocity = Vector3.Lerp(currentVelocity, desiredVelocity, Time.deltaTime);
+		// Unattach to collided wall if exists
+		transform.SetParent(null);
+
+		// Calculate velocity relative to player
+		currentVelocity = Vector3.Lerp(currentVelocity, directionToPlayer.normalized * speed, Time.deltaTime);
 
 		return false;
 	}
@@ -68,45 +87,51 @@ public class OrbController : MonoBehaviour
 		{
 			return;
 		}
+		// Stop the movement
 		currentVelocity = Vector3.zero;
-		hitNormal = collision.contacts[0].normal;
 
+		contactNormal = collision.contacts[0].normal;
+
+		// Attach to collided wall and fix position
 		transform.SetParent(collision.collider.gameObject.transform);
-		transform.position -= hitNormal * collision.contacts[0].separation;
+		transform.position -= contactNormal * collision.contacts[0].separation;
+
+		// Calculate the contact point on collided wall face
+		contactPosition = transform.position - contactNormal * ORB_RADIUS;
 	}
 
 	public bool CanTeleport()
 	{
-		return transform.parent != null && transform.parent != owner;
+		// Can teleport if is attached to wall
+		return transform.parent != null && transform.parent != defaultParent;
 	}
 
-	Vector3 lastTeleportPosition = Vector3.zero;
-	public Vector3 GetTeleportPosition()
+	public void GetTeleportInfo(out Vector3 teleportPosition, out Vector3 contactPosition, out Vector3 teleportNormal)
 	{
-		Vector3 position = transform.position;
-		Vector3 teleportNormal = hitNormal;
+		contactPosition = transform.position - contactNormal * ORB_RADIUS;
+		teleportPosition = transform.position;
 
-		if (transform.parent != null)
+		teleportNormal = contactNormal;
+
+		if (transform.parent.tag == "PassablePlatform")
 		{
-			if (transform.parent.tag == "PassablePlatform")
-			{
-				teleportNormal = -hitNormal;
-				Vector3 difference = transform.parent.transform.position - position;
-				Vector3 offset = Vector3.Scale(difference, hitNormal);
-				float dist = offset.magnitude;
-
-				position += teleportNormal * dist * 2;
-			}
-			position += Vector3.Scale(new Vector3(teleportOffset.x, teleportOffset.y, teleportOffset.x), teleportNormal);
-
+			teleportNormal *= -1;
+			Vector3 dirToWall = transform.parent.transform.position - contactPosition;
+			contactPosition += teleportNormal * Vector3.Scale(dirToWall, teleportNormal).magnitude * 2;
 		}
-		lastTeleportPosition = position;
 
-		return position;
+		teleportPosition = contactPosition + Vector3.Scale(new Vector3(teleportOffset.x, teleportOffset.y, teleportOffset.x), teleportNormal);
+		lastTeleportPosition = teleportPosition;
+		lastTeleportContactPosition = contactPosition;
 	}
 
 	private void OnDrawGizmos()
 	{
-		Gizmos.DrawSphere(lastTeleportPosition, 0.2f);
+		Gizmos.DrawWireSphere(lastTeleportPosition, ORB_RADIUS);
+		Gizmos.color = Color.red;
+		Gizmos.DrawWireSphere(lastTeleportContactPosition, ORB_RADIUS);
+		Gizmos.color = Color.blue;
+		Gizmos.DrawWireSphere(contactPosition, ORB_RADIUS);
+		Gizmos.color = Color.white;
 	}
 }
