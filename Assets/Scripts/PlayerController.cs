@@ -59,6 +59,8 @@ public class PlayerController : MonoBehaviour
 	List<OrbController> orbs;
 	public OrbController currentOrb;
 
+	bool tryToGrab;
+
 	void Start()
 	{
 		characterController = GetComponent<CharacterController>();
@@ -112,15 +114,22 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 
-		animator.SetBool("Attracting", fire2 && currentOrb == null);
+		animator.SetBool("Attracting", fire2 && currentOrb.transform.parent != orbPoint);
 
 		if (grabDown)
 		{
-			GrabToWall();
+			tryToGrab = true;
 		}
 		if (grabUp && grabbedToWall)
 		{
 			UngrabWall();
+			tryToGrab = false;
+
+		}
+
+		if (tryToGrab && !grabbedToWall)
+		{
+			GrabToWall();
 		}
 
 		if(interact)
@@ -138,6 +147,7 @@ public class PlayerController : MonoBehaviour
 
 		if (jump && (isGrounded || grabbedToWall))
 		{
+			tryToGrab = false;
 			Jump();
 		}
 	}
@@ -355,18 +365,35 @@ public class PlayerController : MonoBehaviour
 		// IK management
 		leftHandIK.enabled = true;
 		leftHandIK.target.parent = wall.transform;
-		leftHandIK.target.position = position;
+		leftHandIK.target.position = position + normal * 0.15f;
 		leftHandIK.enabled = true;
 
 		// Calculate IK target rotation relative to the wall face normal
-		// (1, 0, 0) => 0�
-		// (0, 0, -1) => 90�
-		// (0, 0, 1) => -90�
-		// (-1, 0, 0) => -180� || 180�
-		Vector3 rot = leftHandIK.target.eulerAngles;
-		float x = 90 * (-1 + normal.x) * (1 - Mathf.Abs(normal.z));
-		float y = 90 * -normal.z;
+		// (1, 0, 0) => 0
+		// (0, 0, -1) => 90
+		// (0, 0, 1) => -90
+		// (-1, 0, 0) => -180 || 180
+		//float x = 90 * (-1 + normal.x) * (1 - Mathf.Abs(normal.z));
+		//float y = 90 * -normal.z;
+		//Vector3 rot = Vector3.zero;
+		//rot.y = x + y;
+
+		// Calculate IK target rotation relative to the wall face normal
+		// (0, 0, -1) => 0
+		// (1, 0, 0) => -90
+		// (-1, 0, 0) => 90
+		// (0, 0, 1) => 180
+		//Vector3 rot = leftHandIK.target.eulerAngles;
+
+		float x = 90 * (1 + normal.z) * (1 - Mathf.Abs(normal.x));
+		float y = 90 * -normal.x;
+
+		Vector3 rot = Vector3.zero;
 		rot.y = x + y;
+		Debug.Log(normal + " => " + x + ", " + y);
+		rot.z = -90;
+		rot.x = 30;
+
 
 		leftHandIK.target.eulerAngles = rot;
 

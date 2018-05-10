@@ -1,0 +1,400 @@
+fileFormatVersion: 2
+guid: cdaa71276a3531f4883b780817df24c8
+timeCreated: 1510446489
+licenseType: Free
+ModelImporter:
+  serializedVersion: 22
+  fileIDToRecycleName:
+    100000: Armature
+    100002: //RootNode
+    100004: Character
+    100006: clavicle_l
+    100008: clavicle_r
+    100010: Cube_001
+    100012: Cube_005
+    100014: Glove
+    100016: Glove_001
+    100018: Glove_001_MeshPart0
+    100020: Glove_001_MeshPart1
+    100022: Glove_002
+    100024: Hand
+    100026: hand_l
+    100028: hand_r
+    100030: index_01_l
+    100032: index_01_r
+    100034: index_02_l
+    100036: index_02_r
+    100038: index_03_l
+    100040: index_03_r
+    100042: lowerarm_l
+    100044: lowerarm_r
+    100046: middle_01_l
+    100048: middle_01_r
+    100050: middle_02_l
+    100052: middle_02_r
+    100054: middle_03_l
+    100056: middle_03_r
+    100058: pinky_01_l
+    100060: pinky_01_r
+    100062: pinky_02_l
+    100064: pinky_02_r
+    100066: pinky_03_l
+    100068: pinky_03_r
+    100070: ring_01_l
+    100072: ring_01_r
+    100074: ring_02_l
+    100076: ring_02_r
+    100078: ring_03_l
+    100080: ring_03_r
+    100082: root
+    100084: thumb_01_l
+    100086: thumb_01_r
+    100088: thumb_02_l
+    100090: thumb_02_r
+    100092: thumb_03_l
+    100094: thumb_03_r
+    100096: upperarm_l
+    100098: upperarm_r
+    100100: Glove_001_MeshPart2
+    100102: Glove_001_MeshPart3
+    100104: Glove_001_MeshPart4
+    100106: Glove_Bottom
+    100108: Glove_Top
+    100110: Glove_Top_MeshPart0
+    100112: Glove_Top_MeshPart1
+    400000: Armature
+    400002: //RootNode
+    400004: Character
+    400006: clavicle_l
+    400008: clavicle_r
+    400010: Cube_001
+    400012: Cube_005
+    400014: Glove
+    400016: Glove_001
+    400018: Glove_001_MeshPart0
+    400020: Glove_001_MeshPart1
+    400022: Glove_002
+    400024: Hand
+    400026: hand_l
+    400028: hand_r
+    400030: index_01_l
+    400032: index_01_r
+    400034: index_02_l
+    400036: index_02_r
+    400038: index_03_l
+    400040: index_03_r
+    400042: lowerarm_l
+    400044: lowerarm_r
+    400046: middle_01_l
+    400048: middle_01_r
+    400050: middle_02_l
+    400052: middle_02_r
+    400054: middle_03_l
+    400056: middle_03_r
+    400058: pinky_01_l
+    400060: pinky_01_r
+    400062: pinky_02_l
+    400064: pinky_02_r
+    400066: pinky_03_l
+    400068: pinky_03_r
+    400070: ring_01_l
+    400072: ring_01_r
+    400074: ring_02_l
+    400076: ring_02_r
+    400078: ring_03_l
+    400080: ring_03_r
+    400082: root
+    400084: thumb_01_l
+    400086: thumb_01_r
+    400088: thumb_02_l
+    400090: thumb_02_r
+    400092: thumb_03_l
+    400094: thumb_03_r
+    400096: upperarm_l
+    400098: upperarm_r
+    400100: Glove_001_MeshPart2
+    400102: Glove_001_MeshPart3
+    400104: Glove_001_MeshPart4
+    400106: Glove_Bottom
+    400108: Glove_Top
+    400110: Glove_Top_MeshPart0
+    400112: Glove_Top_MeshPart1
+    2300000: Cube_001
+    2300002: Cube_005
+    2300004: Hand
+    3300000: Cube_001
+    3300002: Cube_005
+    3300004: Hand
+    4300000: Cube_005
+    4300002: Cube_001
+    4300004: Glove_002
+    4300006: Glove_001_MeshPart0
+    4300008: Glove_001_MeshPart1
+    4300010: Glove
+    4300012: Character
+    4300014: Hand
+    4300016: Glove_001
+    4300018: Glove_001_MeshPart2
+    4300020: Glove_001_MeshPart3
+    4300022: Glove_001_MeshPart4
+    4300024: Glove_Bottom
+    4300026: Glove_Top_MeshPart0
+    4300028: Glove_Top_MeshPart1
+    7400000: Default Take
+    7400002: Idle
+    7400004: Shoot
+    7400006: Attract
+    7400008: Attract (1)
+    9500000: //RootNode
+    13700000: Character
+    13700002: Glove
+    13700004: Glove_001_MeshPart0
+    13700006: Glove_001_MeshPart1
+    13700008: Glove_002
+    13700010: Glove_001
+    13700012: Glove_001_MeshPart2
+    13700014: Glove_001_MeshPart3
+    13700016: Glove_001_MeshPart4
+    13700018: Glove_Bottom
+    13700020: Glove_Top_MeshPart0
+    13700022: Glove_Top_MeshPart1
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Arms_Mat
+    second: {fileID: 2100000, guid: 3f6acc771adc72646a16791000bf00f0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ExoGlove1_Mat
+    second: {fileID: 2100000, guid: c9cca9835056a8445ade7d398f887608, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: ExoGlove2_Mat
+    second: {fileID: 2100000, guid: 2a7de85e551db7d46b3ce2d0bce6536a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Glove_Mat
+    second: {fileID: 2100000, guid: 0f0e65efb6088204aaf979b9f701b035, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__Untitled_003
+    second: {fileID: 2100000, guid: 83bbe796984db724c836a6bf3b0b18b9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material__normal_map
+    second: {fileID: 2100000, guid: 403e9ab7060cb6b4ab173f164bbdaf4c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Nails
+    second: {fileID: 2100000, guid: 925cb94b18ca7fd41860230b206b6830, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Propulsor1_Mat
+    second: {fileID: 2100000, guid: a4f12150cb0cbe74d980e4d67e2be612, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Propulsor2_Mat
+    second: {fileID: 2100000, guid: 951e7c81f858802499a491e02f964769, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: unnamed
+    second: {fileID: 2100000, guid: be805ca55cb844b48bd2f6f3e6ecc11d, type: 2}
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Default Take
+      takeName: Default Take
+      firstFrame: 0
+      lastFrame: 249
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Attract
+      takeName: Attract
+      firstFrame: 0
+      lastFrame: 59
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Idle
+      takeName: Idle
+      firstFrame: 0
+      lastFrame: 79
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Shoot
+      takeName: Shoot
+      firstFrame: 0
+      lastFrame: 29
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 0.2
+    meshCompression: 0
+    addColliders: 0
+    importVisibility: 1
+    importBlendShapes: 0
+    importCameras: 0
+    importLights: 0
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
