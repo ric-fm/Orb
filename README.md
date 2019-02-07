@@ -1,5 +1,5 @@
 # Orb
-My submission for ![GitHub GameOff 2017](https://itch.io/jam/game-off-2017)
+My submission for ![GitHub GameOff 2017](https://itch.io/jam/game-off-2017) (UNFINISHED)
 
 * **Theme:** Throwback
 
@@ -7,7 +7,7 @@ My submission for ![GitHub GameOff 2017](https://itch.io/jam/game-off-2017)
 
 * **Tools:**
 
-  * Unity 2017.2.0f3
+  * Unity 2018.3.4f1
   * Visual Studio 2017
   * Blender
 
